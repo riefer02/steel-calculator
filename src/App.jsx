@@ -122,21 +122,21 @@ function App() {
   const handleModifiedCostPerInch = debounce(() => {
     const grossRevenue = costPerInch * length * pieces;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = ((netProfits / grossRevenue) * 1).toFixed(2);
+    const newGrossPercentage = (netProfits / grossRevenue) * 1;
     setGrossPercentage(newGrossPercentage);
   });
 
   const handleModifiedCostPerPound = debounce(() => {
     const grossRevenue = costPerPound * totalPounds;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = ((netProfits / grossRevenue) * 1).toFixed(2);
+    const newGrossPercentage = (netProfits / grossRevenue) * 1;
     setGrossPercentage(newGrossPercentage);
   });
 
   const handleModifiedCostPerPiece = debounce(() => {
     const grossRevenue = costPerPiece * pieces;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = ((netProfits / grossRevenue) * 1).toFixed(2);
+    const newGrossPercentage = (netProfits / grossRevenue) * 1;
     setGrossPercentage(newGrossPercentage);
   });
 
