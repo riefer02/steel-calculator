@@ -1,0 +1,23 @@
+button[type="submit"] {
+  background-color: none;
+}
+
+.btn-submit {
+  @apply font-bold py-2 px-4 rounded-full text-white !bg-blue-500 hover:!bg-blue-700 focus:outline-none focus:shadow-md cursor-pointer;
+}
+
+.input-material {
+  @apply w-full py-2 px-3 bg-white rounded-md focus:outline-none focus:shadow-md shadow-sm border border-blue-300;
+}
+
+.input-material::placeholder {
+  @apply text-gray-500;
+}
+
+.input-material:focus {
+  @apply bg-white;
+}
+
+.input-material:disabled {
+  @apply bg-gray-200;
+}
