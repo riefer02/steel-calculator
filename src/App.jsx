@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Loader from "./components/Loader.jsx";
 import "./App.css";
 
@@ -32,44 +32,62 @@ function App() {
 
   const calcTotalCosts = () =>
     setTotalCost(
-      (
-        parseFloat(
-          ((outsideDiameter * outsideDiameter * 2.67) / 12) *
-            length *
-            pieces *
-            cost
-        ) + externalCost
+      Number(
+        ((outsideDiameter * outsideDiameter * 2.67) / 12) *
+          length *
+          pieces *
+          cost +
+          externalCost
       ).toFixed(2)
     );
   const calcTotalPounds = () =>
     setTotalPounds(
-      parseFloat(
-        ((outsideDiameter * outsideDiameter * 2.67) / 12) * length * pieces
-      ).toFixed(2)
+      Number(
+        (
+          ((outsideDiameter * outsideDiameter * 2.67) / 12) *
+          length *
+          pieces
+        ).toFixed(2)
+      )
     );
   const calcTotalCharge = () =>
-    setTotalCharge(parseFloat(totalCost / (1 - grossPercentage)).toFixed(2));
+    setTotalCharge(Number((totalCost / (1 - grossPercentage)).toFixed(2)));
   const calcCostPerInch = () =>
-    setCostPerInch(parseFloat(totalCharge / (length * pieces)).toFixed(2));
+    setCostPerInch(Number((totalCharge / (length * pieces)).toFixed(2)));
   const calcCostPerPound = () =>
-    setCostPerPound(parseFloat(totalCharge / totalPounds).toFixed(2));
+    setCostPerPound(Number((totalCharge / totalPounds).toFixed(2)));
   const calcCostPerPiece = () =>
-    setCostPerPiece(parseFloat(totalCharge / pieces).toFixed(2));
+    setCostPerPiece(Number((totalCharge / pieces).toFixed(2)));
   const calcGrossProfit = () =>
-    setGrossProfit(parseFloat(totalCharge - totalCost).toFixed(2));
+    setGrossProfit(Number((totalCharge - totalCost).toFixed(2)));
 
   useEffect(() => {
     calcTotalCosts();
+  }, [outsideDiameter, length, pieces, cost, externalCost]);
+
+  useEffect(() => {
     calcTotalPounds();
+  }, [outsideDiameter, length, pieces]);
+
+  useEffect(() => {
     calcTotalCharge();
-  }, [outsideDiameter, length, pieces, cost, grossPercentage, externalCost]);
+  }, [totalCost, grossPercentage]);
+
+  useEffect(() => {
+    calcGrossProfit();
+  }, [totalCharge, totalCost]);
 
   useEffect(() => {
     calcCostPerPound();
+  }, [totalCharge, totalPounds]);
+
+  useEffect(() => {
     calcCostPerInch();
+  }, [totalCharge, length, pieces]);
+
+  useEffect(() => {
     calcCostPerPiece();
-    calcGrossProfit();
-  }, [totalCharge, totalCost]);
+  }, [totalCharge, pieces]);
 
   useEffect(() => {
     if (!isLoading) return;
@@ -122,6 +140,29 @@ function App() {
     setGrossPercentage(newGrossPercentage);
   });
 
+  const printValues = () => {
+    console.log({
+      outsideDiameter,
+      length,
+      pieces,
+      cost,
+      externalCost,
+      grossPercentage,
+      totalCost,
+      totalPounds,
+      costPerPound,
+      costPerPiece,
+      costPerInch,
+      totalCharge,
+      grossProfit,
+      isLoading,
+    });
+  };
+
+  const handleFocus = (event) => {
+    event.target.select();
+  };
+
   return (
     <div className="bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900 min-h-screen grid items-center justify-center">
       <div className="mx-auto max-w-7xl w-full p-4 bg-white rounded-md bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-80 border border-gray-100">
@@ -145,7 +186,8 @@ function App() {
               step="0.001"
               className="input-material"
               value={outsideDiameter}
-              onChange={(e) => setOutsideDiameter(e.target.value)}
+              onChange={(e) => setOutsideDiameter(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
             <label htmlFor="length">Length (inches):</label>
             <input
@@ -156,7 +198,8 @@ function App() {
               step="0.001"
               className="input-material"
               value={length}
-              onChange={(e) => setLength(e.target.value)}
+              onChange={(e) => setLength(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
             <label htmlFor="pieces">Pieces of Steel:</label>
             <input
@@ -167,7 +210,8 @@ function App() {
               step="1"
               className="input-material"
               value={pieces}
-              onChange={(e) => setPieces(e.target.value)}
+              onChange={(e) => setPieces(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
             <label htmlFor="cost">Cost of Metal Per Pound:</label>
             <input
@@ -178,7 +222,8 @@ function App() {
               step="0.001"
               className="input-material"
               value={cost}
-              onChange={(e) => setCost(e.target.value)}
+              onChange={(e) => setCost(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
             <label htmlFor="cost">External Costs:</label>
             <input
@@ -189,7 +234,8 @@ function App() {
               step="0.01"
               className="input-material"
               value={externalCost}
-              onChange={(e) => setExternalCost(parseFloat(e.target.value))}
+              onChange={(e) => setExternalCost(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
             <label htmlFor="gross-percentage">Gross Percentage:</label>
             <input
@@ -201,7 +247,8 @@ function App() {
               max="1"
               className="input-material mb-4"
               value={grossPercentage}
-              onChange={(e) => setGrossPercentage(parseFloat(e.target.value))}
+              onChange={(e) => setGrossPercentage(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
           </div>
           <div className="flex flex-col gap-y-4 ">
@@ -214,7 +261,8 @@ function App() {
               min="0"
               className="input-material"
               value={totalCost}
-              onChange={(e) => setTotalCost(e.target.value)}
+              onChange={(e) => setTotalCost(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
             <label htmlFor="total-pounds">Total Pounds:</label>
             <input
@@ -224,7 +272,8 @@ function App() {
               min="0"
               className="input-material"
               value={totalPounds}
-              onChange={(e) => setTotalPounds(e.target.value)}
+              onChange={(e) => setTotalPounds(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
 
             <label htmlFor="total-charge">Total Charge (Gross Revenue):</label>
@@ -235,7 +284,8 @@ function App() {
               min="0"
               className="input-material"
               value={totalCharge}
-              onChange={(e) => setTotalCharge(e.target.value)}
+              onChange={(e) => setTotalCharge(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
             <label htmlFor="gross-profit">Net Profit:</label>
             <input
@@ -245,7 +295,8 @@ function App() {
               min="0"
               className="input-material"
               value={grossProfit}
-              onChange={(e) => setGrossProfit(e.target.value)}
+              onChange={(e) => setGrossProfit(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
             />
           </div>
           <div className="flex flex-col gap-y-4">
@@ -259,10 +310,10 @@ function App() {
               step="0.01"
               className="input-material"
               value={costPerInch}
-              // onChange={(e) => setCostPerInch(e.target.value)}
+              onFocus={(e) => handleFocus(e)}
               onChange={(e) =>
                 handleRecalculateGrossPercentage(
-                  parseFloat(e.target.value),
+                  Number(e.target.value),
                   "cost-by-inches"
                 )
               }
@@ -276,10 +327,10 @@ function App() {
               step="0.01"
               className="input-material"
               value={costPerPiece}
-              // onChange={(e) => setCostPerPiece(e.target.value)}
+              onFocus={(e) => handleFocus(e)}
               onChange={(e) =>
                 handleRecalculateGrossPercentage(
-                  parseFloat(e.target.value),
+                  Number(e.target.value),
                   "cost-by-pieces"
                 )
               }
@@ -293,13 +344,18 @@ function App() {
               step="0.01"
               className="input-material"
               value={costPerPound}
-              // onChange={(e) => setCostPerPound(e.target.value)}
+              onFocus={(e) => handleFocus(e)}
               onChange={(e) =>
                 handleRecalculateGrossPercentage(
-                  parseFloat(e.target.value),
+                  Number(e.target.value),
                   "cost-by-pounds"
                 )
               }
+            />
+            <input
+              onClick={() => printValues()}
+              type="submit"
+              className="btn-submit"
             />
           </div>
         </div>
