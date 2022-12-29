@@ -51,7 +51,9 @@ function App() {
       )
     );
   const calcTotalCharge = () =>
-    setTotalCharge(Number((totalCost / (1 - grossPercentage)).toFixed(2)));
+    setTotalCharge(
+      Number((totalCost / (1 - grossPercentage / 100)).toFixed(2))
+    );
   const calcCostPerInch = () =>
     setCostPerInch(Number((totalCharge / (length * pieces)).toFixed(2)));
   const calcCostPerPound = () =>
@@ -122,22 +124,22 @@ function App() {
   const handleModifiedCostPerInch = debounce(() => {
     const grossRevenue = costPerInch * length * pieces;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = (netProfits / grossRevenue) * 1;
-    setGrossPercentage(newGrossPercentage);
+    const newGrossPercentage = (netProfits / grossRevenue) * 100;
+    setGrossPercentage(newGrossPercentage.toFixed(1));
   });
 
   const handleModifiedCostPerPound = debounce(() => {
     const grossRevenue = costPerPound * totalPounds;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = (netProfits / grossRevenue) * 1;
-    setGrossPercentage(newGrossPercentage);
+    const newGrossPercentage = (netProfits / grossRevenue) * 100;
+    setGrossPercentage(newGrossPercentage.toFixed(1));
   });
 
   const handleModifiedCostPerPiece = debounce(() => {
     const grossRevenue = costPerPiece * pieces;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = (netProfits / grossRevenue) * 1;
-    setGrossPercentage(newGrossPercentage);
+    const newGrossPercentage = (netProfits / grossRevenue) * 100;
+    setGrossPercentage(newGrossPercentage.toFixed(1));
   });
 
   const printValues = () => {
@@ -242,9 +244,9 @@ function App() {
               type="number"
               id="gross-percentage"
               name="gross-percentage"
-              min="0.01"
-              step="0.01"
-              max="1"
+              min="00.0"
+              step="0.1"
+              max="100.0"
               className="input-material mb-4"
               value={grossPercentage}
               onChange={(e) => setGrossPercentage(Number(e.target.value))}
