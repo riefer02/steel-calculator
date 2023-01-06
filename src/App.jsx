@@ -203,7 +203,7 @@ function App() {
               onChange={(e) => setLength(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
             />
-            <label htmlFor="pieces">Pieces of Steel:</label>
+            <label htmlFor="pieces">Pieces:</label>
             <input
               type="number"
               id="pieces"
@@ -215,7 +215,7 @@ function App() {
               onChange={(e) => setPieces(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
             />
-            <label htmlFor="cost">Cost of Metal Per Pound:</label>
+            <label htmlFor="cost">Cost per Pound:</label>
             <input
               type="number"
               id="cost"
@@ -239,7 +239,7 @@ function App() {
               onChange={(e) => setExternalCost(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
             />
-            <label htmlFor="gross-percentage">Gross Percentage:</label>
+            <label htmlFor="gross-percentage">Margin</label>
             <input
               type="number"
               id="gross-percentage"
@@ -277,19 +277,7 @@ function App() {
               onChange={(e) => setTotalPounds(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
             />
-
-            <label htmlFor="total-charge">Total Charge (Gross Revenue):</label>
-            <input
-              type="number"
-              id="total-charge"
-              name="total-charge"
-              min="0"
-              className="input-material"
-              value={totalCharge}
-              onChange={(e) => setTotalCharge(Number(e.target.value))}
-              onFocus={(e) => handleFocus(e)}
-            />
-            <label htmlFor="gross-profit">Net Profit:</label>
+            <label htmlFor="gross-profit">Gross Profit:</label>
             <input
               type="number"
               id="gross-profit"
@@ -300,10 +288,21 @@ function App() {
               onChange={(e) => setGrossProfit(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
             />
+            <label htmlFor="total-charge">Total Price:</label>
+            <input
+              type="number"
+              id="total-charge"
+              name="total-charge"
+              min="0"
+              className="input-material"
+              value={totalCharge}
+              onChange={(e) => setTotalCharge(Number(e.target.value))}
+              onFocus={(e) => handleFocus(e)}
+            />
           </div>
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Breakdown</h2>
-            <label htmlFor="cost-per-inches">Cost By Inch:</label>
+            <label htmlFor="cost-per-inches">Price per Inch:</label>
             <input
               type="number"
               id="cost-per-inches"
@@ -320,7 +319,7 @@ function App() {
                 )
               }
             />
-            <label htmlFor="cost-per-pieces">Cost By Piece:</label>
+            <label htmlFor="cost-per-pieces">Price per Piece:</label>
             <input
               type="number"
               id="cost-per-pieces"
@@ -337,7 +336,7 @@ function App() {
                 )
               }
             />
-            <label htmlFor="cost-per-pound">Cost By Pound:</label>
+            <label htmlFor="cost-per-pound">Price per Pound:</label>
             <input
               type="number"
               id="cost-per-pounds"
