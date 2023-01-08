@@ -170,7 +170,7 @@ function App() {
   };
 
   return (
-    <div className="bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900 min-h-screen grid items-center justify-center">
+    <div className="bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900 min-h-screen lg:grid items-center justify-center">
       <div className="mx-auto max-w-7xl w-full p-4 bg-white rounded-md bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-80 border border-gray-100">
         <div className="flex items-center justify-center gap-2 mb-4 relative">
           <h1 className="text-3xl ml-2 text-center relative">
@@ -180,7 +180,7 @@ function App() {
             Steel Calculator
           </h1>
         </div>
-        <div className="grid grid-cols-3 gap-x-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8">
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Inputs</h2>
             <label htmlFor="od">Outside Diameter (inches):</label>
