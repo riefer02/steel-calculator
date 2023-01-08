@@ -125,21 +125,21 @@ function App() {
     const grossRevenue = costPerInch * length * pieces;
     const netProfits = grossRevenue - totalCost;
     const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage.toFixed(1));
+    setGrossPercentage(newGrossPercentage.toFixed(4));
   });
 
   const handleModifiedCostPerPound = debounce(() => {
     const grossRevenue = costPerPound * totalPounds;
     const netProfits = grossRevenue - totalCost;
     const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage.toFixed(1));
+    setGrossPercentage(newGrossPercentage.toFixed(4));
   });
 
   const handleModifiedCostPerPiece = debounce(() => {
     const grossRevenue = costPerPiece * pieces;
     const netProfits = grossRevenue - totalCost;
     const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage.toFixed(1));
+    setGrossPercentage(newGrossPercentage.toFixed(4));
   });
 
   const printValues = () => {
@@ -160,6 +160,10 @@ function App() {
       isLoading,
     });
   };
+
+  function roundToTenths(num) {
+    return Math.round(num * 10) / 10;
+  }
 
   const handleFocus = (event) => {
     event.target.select();
@@ -248,7 +252,7 @@ function App() {
               step="0.1"
               max="100.0"
               className="input-material mb-4"
-              value={grossPercentage}
+              value={roundToTenths(grossPercentage)}
               onChange={(e) => setGrossPercentage(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
             />
