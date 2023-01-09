@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import Loader from "./components/Loader.jsx";
+import NumberInput from "./components/NumberInput.jsx";
 import "./App.css";
 
 let timer;
 
 function App() {
-  const [outsideDiameter, setOutsideDiameter] = useState(0);
+  const [outsideDiameter, setOutsideDiameter] = useState(0.0);
   const [length, setLength] = useState(0);
   const [pieces, setPieces] = useState(0);
   const [cost, setCost] = useState(0);
@@ -184,17 +185,34 @@ function App() {
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Inputs</h2>
             <label htmlFor="od">Outside Diameter (inches):</label>
-            <input
-              type="number"
+            {/* <input
+              type="text"
               id="od"
               name="od"
               min="0.001"
-            
+              step="0.001"
               className="input-material"
               value={outsideDiameter}
-              onChange={(e) => setOutsideDiameter(Number(e.target.value))}
+              onInput={(e) => {
+                // Test the input value using a regular expression
+                if (/^\d*\.?\d*$/.test(e.target.value)) {
+                  // Update the outsideDiameter state
+                  setOutsideDiameter(Number(e.target.value));
+                }
+              }}
+              onChange={(e) => {
+                // Test the input value using a regular expression
+                if (/^\d*\.?\d*$/.test(e.target.value)) {
+                  // Update the value of the input field
+                  e.target.value = e.target.value;
+                }
+              }}
               onFocus={(e) => handleFocus(e)}
               inputMode="decimal"
+            /> */}
+            <NumberInput
+              value={outsideDiameter}
+              onChange={(event) => setOutsideDiameter(event.target.value)}
             />
             <label htmlFor="length">Length (inches):</label>
             <input
