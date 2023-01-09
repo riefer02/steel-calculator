@@ -189,7 +189,7 @@ function App() {
               id="od"
               name="od"
               min="0.001"
-              step="0.001"
+            
               className="input-material"
               value={outsideDiameter}
               onChange={(e) => setOutsideDiameter(Number(e.target.value))}
