@@ -188,7 +188,7 @@ function App() {
               type="number"
               id="od"
               name="od"
-              min="0"
+              min="0.001"
               step="0.001"
               className="input-material"
               value={outsideDiameter}
@@ -200,7 +200,7 @@ function App() {
               type="number"
               id="length"
               name="length"
-              min="0"
+              min="0.001"
               step="0.001"
               className="input-material"
               value={length}
@@ -224,7 +224,7 @@ function App() {
               type="number"
               id="cost"
               name="cost"
-              min="0"
+              min="0.0"
               step="0.001"
               className="input-material"
               value={cost}
@@ -236,7 +236,7 @@ function App() {
               type="number"
               id="external-cost"
               name="external-cost"
-              min="0"
+              min="0.0"
               step="0.01"
               className="input-material"
               value={externalCost}
