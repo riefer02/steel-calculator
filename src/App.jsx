@@ -194,6 +194,7 @@ function App() {
               value={outsideDiameter}
               onChange={(e) => setOutsideDiameter(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+              inputMode="decimal"
             />
             <label htmlFor="length">Length (inches):</label>
             <input
