@@ -39,7 +39,7 @@ function App() {
           pieces *
           cost +
           externalCost
-      ).toFixed(2)
+      )
     );
   const calcTotalPounds = () =>
     setTotalPounds(
@@ -215,7 +215,7 @@ function App() {
               onChange={(event) => setOutsideDiameter(event.target.value)}
             />
             <label htmlFor="length">Length (inches):</label>
-            <input
+            {/* <input
               type="number"
               id="length"
               name="length"
@@ -225,9 +225,13 @@ function App() {
               value={length}
               onChange={(e) => setLength(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+            /> */}
+            <NumberInput
+              value={length}
+              onChange={(e) => setLength(e.target.value)}
             />
             <label htmlFor="pieces">Pieces:</label>
-            <input
+            {/* <input
               type="number"
               id="pieces"
               name="pieces"
@@ -237,9 +241,13 @@ function App() {
               value={pieces}
               onChange={(e) => setPieces(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+            /> */}
+            <NumberInput
+              value={pieces}
+              onChange={(e) => setPieces(e.target.value)}
             />
             <label htmlFor="cost">Cost per Pound:</label>
-            <input
+            {/* <input
               type="number"
               id="cost"
               name="cost"
@@ -249,9 +257,13 @@ function App() {
               value={cost}
               onChange={(e) => setCost(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+            /> */}
+            <NumberInput
+              value={cost}
+              onChange={(e) => setCost(e.target.value)}
             />
             <label htmlFor="cost">External Costs:</label>
-            <input
+            {/* <input
               type="number"
               id="external-cost"
               name="external-cost"
@@ -261,9 +273,13 @@ function App() {
               value={externalCost}
               onChange={(e) => setExternalCost(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+            /> */}
+            <NumberInput
+              value={externalCost}
+              onChange={(e) => setExternalCost(e.target.value)}
             />
             <label htmlFor="gross-percentage">Margin</label>
-            <input
+            {/* <input
               type="number"
               id="gross-percentage"
               name="gross-percentage"
@@ -274,12 +290,17 @@ function App() {
               value={roundToTenths(grossPercentage)}
               onChange={(e) => setGrossPercentage(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+            /> */}
+            <NumberInput
+              // value={roundToTenths(grossPercentage)}
+              value={roundToTenths(grossPercentage)}
+              onChange={(e) => setGrossPercentage(e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-y-4 ">
             <h2 className="text-center text-2xl">Outputs</h2>
             <label htmlFor="total-cost">Total Cost:</label>
-            <input
+            {/* <input
               type="number"
               id="total-cost"
               name="total-cost"
@@ -288,9 +309,13 @@ function App() {
               value={totalCost}
               onChange={(e) => setTotalCost(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+            /> */}
+            <NumberInput
+              value={Number(totalCost).toFixed(2) || 0}
+              onChange={(e) => setTotalCost(e.target.value)}
             />
             <label htmlFor="total-pounds">Total Pounds:</label>
-            <input
+            {/* <input
               type="number"
               id="total-pounds"
               name="total-pounds"
@@ -299,9 +324,13 @@ function App() {
               value={totalPounds}
               onChange={(e) => setTotalPounds(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+            /> */}
+            <NumberInput
+              value={totalPounds}
+              onChange={(e) => setTotalPounds(e.target.value)}
             />
             <label htmlFor="gross-profit">Gross Profit:</label>
-            <input
+            {/* <input
               type="number"
               id="gross-profit"
               name="gross-profit"
@@ -310,9 +339,13 @@ function App() {
               value={grossProfit}
               onChange={(e) => setGrossProfit(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+            /> */}
+            <NumberInput
+              value={Number(grossProfit).toFixed(2) || 0}
+              onChange={(e) => setGrossProfit(e.target.value)}
             />
             <label htmlFor="total-charge">Total Price:</label>
-            <input
+            {/* <input
               type="number"
               id="total-charge"
               name="total-charge"
@@ -321,12 +354,16 @@ function App() {
               value={totalCharge}
               onChange={(e) => setTotalCharge(Number(e.target.value))}
               onFocus={(e) => handleFocus(e)}
+            />*/}
+            <NumberInput
+              value={Number(totalCharge).toFixed(2) || 0}
+              onChange={(e) => setTotalCharge(e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Breakdown</h2>
             <label htmlFor="cost-per-inches">Price per Inch:</label>
-            <input
+            {/* <input
               type="number"
               id="cost-per-inches"
               name="cost-per-inches"
@@ -341,9 +378,18 @@ function App() {
                   "cost-by-inches"
                 )
               }
+            /> */}
+            <NumberInput
+              value={costPerInch || 0}
+              onChange={(e) =>
+                handleRecalculateGrossPercentage(
+                  e.target.value,
+                  "cost-by-inches"
+                )
+              }
             />
             <label htmlFor="cost-per-pieces">Price per Piece:</label>
-            <input
+            {/* <input
               type="number"
               id="cost-per-pieces"
               name="cost-per-pieces"
@@ -358,9 +404,18 @@ function App() {
                   "cost-by-pieces"
                 )
               }
+            /> */}
+            <NumberInput
+              value={costPerPiece || 0}
+              onChange={(e) =>
+                handleRecalculateGrossPercentage(
+                  e.target.value,
+                  "cost-by-pieces"
+                )
+              }
             />
             <label htmlFor="cost-per-pound">Price per Pound:</label>
-            <input
+            {/* <input
               type="number"
               id="cost-per-pounds"
               name="cost-per-pounds"
@@ -375,12 +430,16 @@ function App() {
                   "cost-by-pounds"
                 )
               }
-            />
-            {/* <input
-              onClick={() => printValues()}
-              type="submit"
-              className="btn-submit"
             /> */}
+            <NumberInput
+              value={costPerPound || 0}
+              onChange={(e) =>
+                handleRecalculateGrossPercentage(
+                  e.target.value,
+                  "cost-by-pounds"
+                )
+              }
+            />
           </div>
         </div>
       </div>

@@ -8,6 +8,10 @@ const NumberInput = ({ value, onChange }) => {
     }
   };
 
+  const handleFocus = (event) => {
+    event.target.select();
+  };
+
   return (
     <input
       type="text"
@@ -15,6 +19,7 @@ const NumberInput = ({ value, onChange }) => {
       onChange={handleChange}
       inputMode="decimal"
       className="input-material"
+      onFocus={handleFocus}
     />
   );
 };
