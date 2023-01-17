@@ -1,9 +1,15 @@
 import React from "react";
 
-const NumberInput = ({ value, onChange }) => {
+const NumberInput = ({ value, onChange, noDecimals = false }) => {
   const handleChange = (event) => {
     const inputValue = event.target.value;
-    if (/^\d*\.?\d*$/.test(inputValue)) {
+    let regex;
+    if (noDecimals) {
+      regex = /^\d*$/;
+    } else {
+      regex = /^\d*\.?\d*$/;
+    }
+    if (regex.test(inputValue)) {
       onChange(event);
     }
   };
