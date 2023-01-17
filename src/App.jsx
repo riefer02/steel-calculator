@@ -164,19 +164,16 @@ function App() {
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Inputs</h2>
             <label htmlFor="od">Outside Diameter (inches):</label>
-
             <NumberInput
               value={outsideDiameter}
               onChange={(event) => setOutsideDiameter(event.target.value)}
             />
             <label htmlFor="length">Length (inches):</label>
-
             <NumberInput
               value={length}
               onChange={(e) => setLength(e.target.value)}
             />
             <label htmlFor="pieces">Pieces:</label>
-
             <NumberInput
               value={pieces}
               onChange={(e) => setPieces(e.target.value)}
