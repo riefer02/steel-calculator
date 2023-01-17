@@ -190,6 +190,7 @@ function App() {
             <NumberInput
               value={externalCost}
               onChange={(e) => setExternalCost(e.target.value)}
+              noDecimals={true}
             />
             <label htmlFor="gross-percentage">Margin</label>
             <NumberInput
