@@ -3,6 +3,8 @@ import Loader from "./components/Loader.jsx";
 import NumberInput from "./components/NumberInput.jsx";
 import "./App.css";
 
+import { usdFormat, percentFormat } from "./utils/helpers.js";
+
 let timer;
 
 function App() {
@@ -191,7 +193,7 @@ function App() {
             />
             <label htmlFor="gross-percentage">Margin</label>
             <NumberInput
-              value={roundToTenths(grossPercentage)}
+              value={percentFormat.format(grossPercentage / 100)}
               onChange={(e) => setGrossPercentage(e.target.value)}
             />
           </div>
@@ -199,7 +201,7 @@ function App() {
             <h2 className="text-center text-2xl">Outputs</h2>
             <label htmlFor="total-cost">Total Cost:</label>
             <NumberInput
-              value={Number(totalCost).toFixed(2) || 0}
+              value={usdFormat.format(totalCost) || 0}
               onChange={(e) => setTotalCost(e.target.value)}
             />
             <label htmlFor="total-pounds">Total Pounds:</label>
@@ -209,12 +211,12 @@ function App() {
             />
             <label htmlFor="gross-profit">Gross Profit:</label>
             <NumberInput
-              value={Number(grossProfit).toFixed(2) || 0}
+              value={usdFormat.format(grossProfit) || 0}
               onChange={(e) => setGrossProfit(e.target.value)}
             />
             <label htmlFor="total-charge">Total Price:</label>
             <NumberInput
-              value={Number(totalCharge).toFixed(2) || 0}
+              value={usdFormat.format(totalCharge) || 0}
               onChange={(e) => setTotalCharge(e.target.value)}
             />
           </div>
