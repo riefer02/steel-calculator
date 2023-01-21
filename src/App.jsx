@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Loader from "./components/Loader.jsx";
 import NumberInput from "./components/NumberInput.jsx";
+import { NumericFormat } from "react-number-format";
+
 import "./App.css";
 
 let timer;
@@ -52,17 +54,13 @@ function App() {
       )
     );
   const calcTotalCharge = () =>
-    setTotalCharge(
-      Number((totalCost / (1 - grossPercentage / 100)).toFixed(2))
-    );
+    setTotalCharge(Number(totalCost / (1 - grossPercentage / 100)));
   const calcCostPerInch = () =>
-    setCostPerInch(Number((totalCharge / (length * pieces)).toFixed(2)));
+    setCostPerInch(Number(totalCharge / (length * pieces)));
   const calcCostPerPound = () =>
-    setCostPerPound(Number((totalCharge / totalPounds).toFixed(2)));
-  const calcCostPerPiece = () =>
-    setCostPerPiece(Number((totalCharge / pieces).toFixed(2)));
-  const calcGrossProfit = () =>
-    setGrossProfit(Number((totalCharge - totalCost).toFixed(2)));
+    setCostPerPound(Number(totalCharge / totalPounds));
+  const calcCostPerPiece = () => setCostPerPiece(Number(totalCharge / pieces));
+  const calcGrossProfit = () => setGrossProfit(Number(totalCharge - totalCost));
 
   useEffect(() => {
     calcTotalCosts();
@@ -111,8 +109,6 @@ function App() {
     if (isLoading) setLoading(false);
   }, [grossPercentage]);
 
-  useEffect(() => console.log(externalCost), [externalCost]);
-
   const handleRecalculateGrossPercentage = (value, field) => {
     setLoading(true);
     if (field === "cost-by-inches") {
@@ -128,26 +124,22 @@ function App() {
     const grossRevenue = costPerInch * length * pieces;
     const netProfits = grossRevenue - totalCost;
     const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage.toFixed(4));
+    setGrossPercentage(newGrossPercentage);
   });
 
   const handleModifiedCostPerPound = debounce(() => {
     const grossRevenue = costPerPound * totalPounds;
     const netProfits = grossRevenue - totalCost;
     const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage.toFixed(4));
+    setGrossPercentage(newGrossPercentage);
   });
 
   const handleModifiedCostPerPiece = debounce(() => {
     const grossRevenue = costPerPiece * pieces;
     const netProfits = grossRevenue - totalCost;
     const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage.toFixed(4));
+    setGrossPercentage(newGrossPercentage);
   });
-
-  function roundToTenths(num) {
-    return Math.round(num * 10) / 10;
-  }
 
   return (
     <div className="bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900 min-h-screen lg:grid items-center justify-center">
@@ -190,17 +182,30 @@ function App() {
               noDecimals={true}
             />
             <label htmlFor="gross-percentage">Margin</label>
-            <NumberInput
-              value={roundToTenths(grossPercentage)}
-              onChange={(e) => setGrossPercentage(e.target.value)}
+            <NumericFormat
+              value={grossPercentage}
+              suffix="%"
+              displayType={"input"}
+              className="input-material"
+              onValueChange={(val) => {
+                setGrossPercentage(val.floatValue);
+              }}
+              decimalScale={2}
             />
           </div>
           <div className="flex flex-col gap-y-4 ">
             <h2 className="text-center text-2xl">Outputs</h2>
             <label htmlFor="total-cost">Total Cost:</label>
-            <NumberInput
-              value={Number(totalCost).toFixed(2) || 0}
-              onChange={(e) => setTotalCost(e.target.value)}
+            <NumericFormat
+              value={totalCost}
+              displayType={"input"}
+              thousandSeparator={true}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => {
+                setTotalCost(val.floatValue);
+              }}
+              decimalScale={2}
             />
             <label htmlFor="total-pounds">Total Pounds:</label>
             <NumberInput
@@ -208,48 +213,115 @@ function App() {
               onChange={(e) => setTotalPounds(e.target.value)}
             />
             <label htmlFor="gross-profit">Gross Profit:</label>
-            <NumberInput
-              value={Number(grossProfit).toFixed(2) || 0}
-              onChange={(e) => setGrossProfit(e.target.value)}
+            <NumericFormat
+              value={grossProfit}
+              displayType={"input"}
+              thousandSeparator={true}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => {
+                setGrossProfit(val.floatValue);
+              }}
+              decimalScale={2}
             />
             <label htmlFor="total-charge">Total Price:</label>
-            <NumberInput
-              value={Number(totalCharge).toFixed(2) || 0}
-              onChange={(e) => setTotalCharge(e.target.value)}
+            <NumericFormat
+              value={totalCharge}
+              displayType={"input"}
+              thousandSeparator={true}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => {
+                setTotalCharge(val.floatValue);
+              }}
+              decimalScale={2}
             />
           </div>
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Breakdown</h2>
             <label htmlFor="cost-per-inches">Price per Inch:</label>
-            <NumberInput
+            <NumericFormat
               value={costPerInch || 0}
+              displayType={"input"}
+              thousandSeparator={true}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => {
+                handleRecalculateGrossPercentage(
+                  val.floatValue,
+                  "cost-by-inches"
+                );
+              }}
+              decimalScale={2}
+            />
+            {/* <NumberInput
+              value={usdFormat.format(costPerInch) || 0}
               onChange={(e) =>
                 handleRecalculateGrossPercentage(
                   e.target.value,
                   "cost-by-inches"
                 )
               }
-            />
+            /> */}
+            {/* <USDNumberFormat
+              className="number-input"
+              value={costPerInch}
+              onValueChange={(val) => {
+                setLoading(true);
+                debounce(() => setCostPerInch(val.floatValue));
+              }}
+              decimalScale={2}
+              thousandSeparator={true}
+              prefix={"$"}
+            /> */}
             <label htmlFor="cost-per-pieces">Price per Piece:</label>
-            <NumberInput
+            <NumericFormat
               value={costPerPiece || 0}
+              displayType={"input"}
+              thousandSeparator={true}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => {
+                handleRecalculateGrossPercentage(
+                  val.floatValue,
+                  "cost-by-pieces"
+                );
+              }}
+              decimalScale={2}
+            />
+            {/* <NumberInput
+              value={usdFormat.format(costPerPiece) || 0}
               onChange={(e) =>
                 handleRecalculateGrossPercentage(
                   e.target.value,
                   "cost-by-pieces"
                 )
               }
-            />
+            /> */}
             <label htmlFor="cost-per-pound">Price per Pound:</label>
-            <NumberInput
+            <NumericFormat
               value={costPerPound || 0}
+              displayType={"input"}
+              thousandSeparator={true}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => {
+                handleRecalculateGrossPercentage(
+                  val.floatValue,
+                  "cost-by-pounds"
+                );
+              }}
+              decimalScale={2}
+            />
+            {/* <NumberInput
+              value={usdFormat.format(costPerPound) || 0}
               onChange={(e) =>
                 handleRecalculateGrossPercentage(
                   e.target.value,
                   "cost-by-pounds"
                 )
               }
-            />
+            /> */}
           </div>
         </div>
       </div>
