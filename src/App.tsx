@@ -173,6 +173,7 @@ function App() {
             <h2 className="text-center text-2xl">Inputs</h2>
             <label htmlFor="od">Outside Diameter (inches):</label>
             <NumberInput
+              id="od"
               value={outsideDiameter}
               onChange={(event) =>
                 setOutsideDiameter(parseFloat(event.target.value) || 0)
@@ -180,27 +181,32 @@ function App() {
             />
             <label htmlFor="length">Length (inches):</label>
             <NumberInput
+              id="length"
               value={length}
               onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="pieces">Pieces:</label>
             <NumberInput
+              id="pieces"
               value={pieces}
               onChange={(e) => setPieces(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="cost">Cost per Pound:</label>
             <NumberInput
+              id="cost"
               value={cost}
               onChange={(e) => setCost(parseFloat(e.target.value) || 0)}
             />
-            <label htmlFor="cost">External Costs:</label>
+            <label htmlFor="external-cost">External Costs:</label>
             <NumberInput
+              id="external-cost"
               value={externalCost}
               onChange={(e) => setExternalCost(parseFloat(e.target.value) || 0)}
               noDecimals={true}
             />
             <label htmlFor="gross-percentage">Margin</label>
             <NumericFormat
+              id="gross-percentage"
               value={grossPercentage}
               suffix="%"
               displayType={"input"}
@@ -215,6 +221,7 @@ function App() {
             <h2 className="text-center text-2xl">Outputs</h2>
             <label htmlFor="total-cost">Total Cost:</label>
             <NumericFormat
+              id="total-cost"
               value={totalCost}
               displayType={"input"}
               thousandSeparator={true}
@@ -227,11 +234,13 @@ function App() {
             />
             <label htmlFor="total-pounds">Total Pounds:</label>
             <NumberInput
+              id="total-pounds"
               value={totalPounds}
               onChange={(e) => setTotalPounds(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="gross-profit">Gross Profit:</label>
             <NumericFormat
+              id="gross-profit"
               value={grossProfit}
               displayType={"input"}
               thousandSeparator={true}
@@ -244,6 +253,7 @@ function App() {
             />
             <label htmlFor="total-charge">Total Price:</label>
             <NumericFormat
+              id="total-charge"
               value={totalCharge}
               displayType={"input"}
               thousandSeparator={true}
@@ -259,6 +269,7 @@ function App() {
             <h2 className="text-center text-2xl">Breakdown</h2>
             <label htmlFor="cost-per-inches">Price per Inch:</label>
             <NumericFormat
+              id="cost-per-inches"
               value={costPerInch || 0}
               displayType={"input"}
               thousandSeparator={true}
@@ -274,6 +285,7 @@ function App() {
             />
             <label htmlFor="cost-per-pieces">Price per Piece:</label>
             <NumericFormat
+              id="cost-per-pieces"
               value={costPerPiece || 0}
               displayType={"input"}
               thousandSeparator={true}
@@ -289,6 +301,7 @@ function App() {
             />
             <label htmlFor="cost-per-pound">Price per Pound:</label>
             <NumericFormat
+              id="cost-per-pound"
               value={costPerPound || 0}
               displayType={"input"}
               thousandSeparator={true}

@@ -4,12 +4,16 @@ interface NumberInputProps {
   value: number | string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   noDecimals?: boolean;
+  id?: string;
+  placeholder?: string;
 }
 
 const NumberInput = ({
   value,
   onChange,
   noDecimals = false,
+  id,
+  placeholder,
 }: NumberInputProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
@@ -31,10 +35,12 @@ const NumberInput = ({
   return (
     <input
       type="text"
+      id={id}
       value={value}
       onChange={handleChange}
       inputMode="decimal"
       className="input-material"
+      placeholder={placeholder}
       onFocus={handleFocus}
     />
   );
