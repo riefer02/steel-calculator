@@ -7,6 +7,12 @@ import "./App.css";
 
 type CostField = "cost-by-inches" | "cost-by-pieces" | "cost-by-pounds";
 
+function safeDivide(numerator: number, denominator: number): number {
+  if (denominator === 0 || !isFinite(denominator)) return 0;
+  const result = numerator / denominator;
+  return isFinite(result) ? result : 0;
+}
+
 let timer: ReturnType<typeof setTimeout> | undefined;
 
 function App() {
@@ -56,12 +62,13 @@ function App() {
       )
     );
   const calcTotalCharge = () =>
-    setTotalCharge(Number(totalCost / (1 - grossPercentage / 100)));
+    setTotalCharge(safeDivide(totalCost, 1 - grossPercentage / 100));
   const calcCostPerInch = () =>
-    setCostPerInch(Number(totalCharge / (length * pieces)));
+    setCostPerInch(safeDivide(totalCharge, length * pieces));
   const calcCostPerPound = () =>
-    setCostPerPound(Number(totalCharge / totalPounds));
-  const calcCostPerPiece = () => setCostPerPiece(Number(totalCharge / pieces));
+    setCostPerPound(safeDivide(totalCharge, totalPounds));
+  const calcCostPerPiece = () =>
+    setCostPerPiece(safeDivide(totalCharge, pieces));
   const calcGrossProfit = () => setGrossProfit(Number(totalCharge - totalCost));
 
   useEffect(() => {
@@ -139,23 +146,25 @@ function App() {
   const handleModifiedCostPerInch = debounce(() => {
     const grossRevenue = costPerInch * length * pieces;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage);
+    setGrossPercentage(safeDivide(netProfits, grossRevenue) * 100);
   });
 
   const handleModifiedCostPerPound = debounce(() => {
     const grossRevenue = costPerPound * totalPounds;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage);
+    setGrossPercentage(safeDivide(netProfits, grossRevenue) * 100);
   });
 
   const handleModifiedCostPerPiece = debounce(() => {
     const grossRevenue = costPerPiece * pieces;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage);
+    setGrossPercentage(safeDivide(netProfits, grossRevenue) * 100);
   });
+
+  const warnings: string[] = [];
+  if (grossPercentage >= 100)
+    warnings.push("Margin cannot be 100% or higher.");
+  if (grossPercentage < 0) warnings.push("Margin cannot be negative.");
 
   return (
     <div className="bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900 min-h-screen lg:grid items-center justify-center">
@@ -215,6 +224,8 @@ function App() {
                 setGrossPercentage(val.floatValue ?? 0);
               }}
               decimalScale={2}
+              allowNegative={false}
+              isAllowed={(values) => (values.floatValue ?? 0) < 100}
             />
           </div>
           <div className="flex flex-col gap-y-4">
@@ -313,6 +324,15 @@ function App() {
               decimalScale={2}
             />
           </div>
+          {warnings.length > 0 && (
+            <div className="col-span-1 lg:col-span-3 mt-2">
+              {warnings.map((w, i) => (
+                <p key={i} className="text-sm text-red-600">
+                  {w}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
