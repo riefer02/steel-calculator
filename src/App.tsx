@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import Loader from "./components/Loader.jsx";
-import NumberInput from "./components/NumberInput.jsx";
+import Loader from "./components/Loader";
+import NumberInput from "./components/NumberInput";
 import { NumericFormat } from "react-number-format";
 
 import "./App.css";
 
-let timer;
+type CostField = "cost-by-inches" | "cost-by-pieces" | "cost-by-pounds";
+
+let timer: ReturnType<typeof setTimeout> | undefined;
 
 function App() {
   const [outsideDiameter, setOutsideDiameter] = useState(0.0);
@@ -23,11 +25,11 @@ function App() {
   const [grossProfit, setGrossProfit] = useState(0);
   const [isLoading, setLoading] = useState(false);
 
-  function debounce(func, timeout = 1000) {
-    return (...args) => {
+  function debounce(func: () => void, timeout = 1000) {
+    return () => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        func.apply(this, args);
+        func();
         setLoading(false);
       }, timeout);
     };
@@ -64,59 +66,73 @@ function App() {
 
   useEffect(() => {
     calcTotalCosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outsideDiameter, length, pieces, cost, externalCost]);
 
   useEffect(() => {
     calcTotalPounds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outsideDiameter, length, pieces]);
 
   useEffect(() => {
     calcTotalCharge();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCost, grossPercentage]);
 
   useEffect(() => {
     calcGrossProfit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCharge, totalCost]);
 
   useEffect(() => {
     calcCostPerPound();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCharge, totalPounds]);
 
   useEffect(() => {
     calcCostPerInch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCharge, length, pieces]);
 
   useEffect(() => {
     calcCostPerPiece();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCharge, pieces]);
 
   useEffect(() => {
     if (!isLoading) return;
     handleModifiedCostPerInch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [costPerInch]);
 
   useEffect(() => {
     if (!isLoading) return;
     handleModifiedCostPerPound();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [costPerPound]);
 
   useEffect(() => {
     if (!isLoading) return;
     handleModifiedCostPerPiece();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [costPerPiece]);
 
   useEffect(() => {
     if (isLoading) setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grossPercentage]);
 
-  const handleRecalculateGrossPercentage = (value, field) => {
+  const handleRecalculateGrossPercentage = (
+    value: number | undefined,
+    field: CostField
+  ) => {
     setLoading(true);
     if (field === "cost-by-inches") {
-      setCostPerInch(value);
+      setCostPerInch(value ?? 0);
     } else if (field === "cost-by-pieces") {
-      setCostPerPiece(value);
+      setCostPerPiece(value ?? 0);
     } else if (field === "cost-by-pounds") {
-      setCostPerPound(value);
+      setCostPerPound(value ?? 0);
     }
   };
 
@@ -158,27 +174,31 @@ function App() {
             <label htmlFor="od">Outside Diameter (inches):</label>
             <NumberInput
               value={outsideDiameter}
-              onChange={(event) => setOutsideDiameter(event.target.value)}
+              onChange={(event) =>
+                setOutsideDiameter(parseFloat(event.target.value) || 0)
+              }
             />
             <label htmlFor="length">Length (inches):</label>
             <NumberInput
               value={length}
-              onChange={(e) => setLength(e.target.value)}
+              onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="pieces">Pieces:</label>
             <NumberInput
               value={pieces}
-              onChange={(e) => setPieces(e.target.value)}
+              onChange={(e) => setPieces(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="cost">Cost per Pound:</label>
             <NumberInput
               value={cost}
-              onChange={(e) => setCost(e.target.value)}
+              onChange={(e) => setCost(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="cost">External Costs:</label>
             <NumberInput
               value={externalCost}
-              onChange={(e) => setExternalCost(e.target.value)}
+              onChange={(e) =>
+                setExternalCost(parseFloat(e.target.value) || 0)
+              }
               noDecimals={true}
             />
             <label htmlFor="gross-percentage">Margin</label>
@@ -188,7 +208,7 @@ function App() {
               displayType={"input"}
               className="input-material"
               onValueChange={(val) => {
-                setGrossPercentage(val.floatValue);
+                setGrossPercentage(val.floatValue ?? 0);
               }}
               decimalScale={2}
             />
@@ -203,14 +223,14 @@ function App() {
               prefix={"$"}
               className="input-material"
               onValueChange={(val) => {
-                setTotalCost(val.floatValue);
+                setTotalCost(val.floatValue ?? 0);
               }}
               decimalScale={2}
             />
             <label htmlFor="total-pounds">Total Pounds:</label>
             <NumberInput
               value={totalPounds}
-              onChange={(e) => setTotalPounds(e.target.value)}
+              onChange={(e) => setTotalPounds(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="gross-profit">Gross Profit:</label>
             <NumericFormat
@@ -220,7 +240,7 @@ function App() {
               prefix={"$"}
               className="input-material"
               onValueChange={(val) => {
-                setGrossProfit(val.floatValue);
+                setGrossProfit(val.floatValue ?? 0);
               }}
               decimalScale={2}
             />
@@ -232,7 +252,7 @@ function App() {
               prefix={"$"}
               className="input-material"
               onValueChange={(val) => {
-                setTotalCharge(val.floatValue);
+                setTotalCharge(val.floatValue ?? 0);
               }}
               decimalScale={2}
             />
@@ -254,26 +274,6 @@ function App() {
               }}
               decimalScale={2}
             />
-            {/* <NumberInput
-              value={usdFormat.format(costPerInch) || 0}
-              onChange={(e) =>
-                handleRecalculateGrossPercentage(
-                  e.target.value,
-                  "cost-by-inches"
-                )
-              }
-            /> */}
-            {/* <USDNumberFormat
-              className="number-input"
-              value={costPerInch}
-              onValueChange={(val) => {
-                setLoading(true);
-                debounce(() => setCostPerInch(val.floatValue));
-              }}
-              decimalScale={2}
-              thousandSeparator={true}
-              prefix={"$"}
-            /> */}
             <label htmlFor="cost-per-pieces">Price per Piece:</label>
             <NumericFormat
               value={costPerPiece || 0}
@@ -289,15 +289,6 @@ function App() {
               }}
               decimalScale={2}
             />
-            {/* <NumberInput
-              value={usdFormat.format(costPerPiece) || 0}
-              onChange={(e) =>
-                handleRecalculateGrossPercentage(
-                  e.target.value,
-                  "cost-by-pieces"
-                )
-              }
-            /> */}
             <label htmlFor="cost-per-pound">Price per Pound:</label>
             <NumericFormat
               value={costPerPound || 0}
@@ -313,15 +304,6 @@ function App() {
               }}
               decimalScale={2}
             />
-            {/* <NumberInput
-              value={usdFormat.format(costPerPound) || 0}
-              onChange={(e) =>
-                handleRecalculateGrossPercentage(
-                  e.target.value,
-                  "cost-by-pounds"
-                )
-              }
-            /> */}
           </div>
         </div>
       </div>
