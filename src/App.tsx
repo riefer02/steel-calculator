@@ -196,9 +196,7 @@ function App() {
             <label htmlFor="cost">External Costs:</label>
             <NumberInput
               value={externalCost}
-              onChange={(e) =>
-                setExternalCost(parseFloat(e.target.value) || 0)
-              }
+              onChange={(e) => setExternalCost(parseFloat(e.target.value) || 0)}
               noDecimals={true}
             />
             <label htmlFor="gross-percentage">Margin</label>
