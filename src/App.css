@@ -21,3 +21,15 @@ button[type="submit"] {
 .input-material:disabled {
   @apply bg-gray-200;
 }
+
+.output-readonly {
+  @apply w-full py-2 px-3 bg-gray-100 rounded-md shadow-sm border border-gray-300 text-gray-700 cursor-default;
+}
+
+.input-breakdown {
+  @apply w-full py-2 px-3 bg-white rounded-md focus:outline-none focus:shadow-md focus:border-amber-500 shadow-sm border border-amber-300;
+}
+
+.input-breakdown::placeholder {
+  @apply text-gray-500;
+}

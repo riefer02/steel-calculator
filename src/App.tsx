@@ -217,56 +217,53 @@ function App() {
               decimalScale={2}
             />
           </div>
-          <div className="flex flex-col gap-y-4 ">
+          <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Outputs</h2>
-            <label htmlFor="total-cost">Total Cost:</label>
-            <NumericFormat
-              id="total-cost"
-              value={totalCost}
-              displayType={"input"}
-              thousandSeparator={true}
-              prefix={"$"}
-              className="input-material"
-              onValueChange={(val) => {
-                setTotalCost(val.floatValue ?? 0);
-              }}
-              decimalScale={2}
-            />
-            <label htmlFor="total-pounds">Total Pounds:</label>
-            <NumberInput
-              id="total-pounds"
-              value={totalPounds}
-              onChange={(e) => setTotalPounds(parseFloat(e.target.value) || 0)}
-            />
-            <label htmlFor="gross-profit">Gross Profit:</label>
-            <NumericFormat
-              id="gross-profit"
-              value={grossProfit}
-              displayType={"input"}
-              thousandSeparator={true}
-              prefix={"$"}
-              className="input-material"
-              onValueChange={(val) => {
-                setGrossProfit(val.floatValue ?? 0);
-              }}
-              decimalScale={2}
-            />
-            <label htmlFor="total-charge">Total Price:</label>
-            <NumericFormat
-              id="total-charge"
-              value={totalCharge}
-              displayType={"input"}
-              thousandSeparator={true}
-              prefix={"$"}
-              className="input-material"
-              onValueChange={(val) => {
-                setTotalCharge(val.floatValue ?? 0);
-              }}
-              decimalScale={2}
-            />
+            <p className="text-sm font-medium text-gray-700">Total Cost:</p>
+            <div className="output-readonly">
+              <NumericFormat
+                value={totalCost}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"$"}
+                decimalScale={2}
+              />
+            </div>
+            <p className="text-sm font-medium text-gray-700">Total Pounds:</p>
+            <div className="output-readonly">
+              <NumericFormat
+                value={totalPounds}
+                displayType={"text"}
+                thousandSeparator={true}
+                decimalScale={2}
+              />
+            </div>
+            <p className="text-sm font-medium text-gray-700">Gross Profit:</p>
+            <div className="output-readonly">
+              <NumericFormat
+                value={grossProfit}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"$"}
+                decimalScale={2}
+              />
+            </div>
+            <p className="text-sm font-medium text-gray-700">Total Price:</p>
+            <div className="output-readonly">
+              <NumericFormat
+                value={totalCharge}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"$"}
+                decimalScale={2}
+              />
+            </div>
           </div>
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Breakdown</h2>
+            <p className="text-center text-xs text-gray-500">
+              Edit to recalculate margin
+            </p>
             <label htmlFor="cost-per-inches">Price per Inch:</label>
             <NumericFormat
               id="cost-per-inches"
@@ -274,7 +271,7 @@ function App() {
               displayType={"input"}
               thousandSeparator={true}
               prefix={"$"}
-              className="input-material"
+              className="input-breakdown"
               onValueChange={(val) => {
                 handleRecalculateGrossPercentage(
                   val.floatValue,
@@ -290,7 +287,7 @@ function App() {
               displayType={"input"}
               thousandSeparator={true}
               prefix={"$"}
-              className="input-material"
+              className="input-breakdown"
               onValueChange={(val) => {
                 handleRecalculateGrossPercentage(
                   val.floatValue,
@@ -306,7 +303,7 @@ function App() {
               displayType={"input"}
               thousandSeparator={true}
               prefix={"$"}
-              className="input-material"
+              className="input-breakdown"
               onValueChange={(val) => {
                 handleRecalculateGrossPercentage(
                   val.floatValue,
