@@ -184,6 +184,7 @@ function App() {
             <NumberInput
               id="od"
               value={outsideDiameter}
+              placeholder="inches"
               onChange={(event) =>
                 setOutsideDiameter(parseFloat(event.target.value) || 0)
               }
@@ -192,26 +193,38 @@ function App() {
             <NumberInput
               id="length"
               value={length}
+              placeholder="inches"
               onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="pieces">Pieces:</label>
             <NumberInput
               id="pieces"
               value={pieces}
+              placeholder="qty"
               onChange={(e) => setPieces(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="cost">Cost per Pound:</label>
-            <NumberInput
+            <NumericFormat
               id="cost"
               value={cost}
-              onChange={(e) => setCost(parseFloat(e.target.value) || 0)}
+              displayType={"input"}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => setCost(val.floatValue ?? 0)}
+              decimalScale={4}
+              allowNegative={false}
             />
             <label htmlFor="external-cost">External Costs:</label>
-            <NumberInput
+            <NumericFormat
               id="external-cost"
               value={externalCost}
-              onChange={(e) => setExternalCost(parseFloat(e.target.value) || 0)}
-              noDecimals={true}
+              displayType={"input"}
+              thousandSeparator={true}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => setExternalCost(val.floatValue ?? 0)}
+              decimalScale={2}
+              allowNegative={false}
             />
             <label htmlFor="gross-percentage">Margin</label>
             <NumericFormat
