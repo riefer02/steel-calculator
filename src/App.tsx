@@ -171,20 +171,14 @@ function App() {
   };
 
   const warnings: string[] = [];
-  if (grossPercentage >= 100)
-    warnings.push("Margin cannot be 100% or higher.");
+  if (grossPercentage >= 100) warnings.push("Margin cannot be 100% or higher.");
   if (grossPercentage < 0) warnings.push("Margin cannot be negative.");
 
   return (
     <div className="bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900 min-h-screen lg:grid items-center justify-center">
       <div className="mx-auto max-w-7xl w-full p-4 bg-white rounded-md bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-80 border border-gray-100">
         <div className="flex items-center justify-center gap-4 mb-4 relative">
-          <h1 className="text-3xl text-center relative">
-            <div className="absolute top-2 -left-8">
-              {isLoading && <Loader />}
-            </div>
-            Steel Calculator
-          </h1>
+          <h1 className="text-3xl text-center">Steel Calculator</h1>
           <button
             type="button"
             onClick={handleReset}
@@ -301,8 +295,14 @@ function App() {
           </div>
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Breakdown</h2>
-            <p className="text-center text-xs text-gray-500">
-              Edit to recalculate margin
+            <p className="text-center text-xs text-gray-500 h-5">
+              {isLoading ? (
+                <span className="inline-flex items-center gap-1 text-amber-600">
+                  <Loader /> Recalculating...
+                </span>
+              ) : (
+                "Edit to recalculate margin"
+              )}
             </p>
             <label htmlFor="cost-per-inches">Price per Inch:</label>
             <NumericFormat
