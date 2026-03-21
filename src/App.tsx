@@ -161,6 +161,15 @@ function App() {
     setGrossPercentage(safeDivide(netProfits, grossRevenue) * 100);
   });
 
+  const handleReset = () => {
+    setOutsideDiameter(0);
+    setLength(0);
+    setPieces(0);
+    setCost(0);
+    setExternalCost(0);
+    setGrossPercentage(0);
+  };
+
   const warnings: string[] = [];
   if (grossPercentage >= 100)
     warnings.push("Margin cannot be 100% or higher.");
@@ -169,13 +178,20 @@ function App() {
   return (
     <div className="bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900 min-h-screen lg:grid items-center justify-center">
       <div className="mx-auto max-w-7xl w-full p-4 bg-white rounded-md bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-80 border border-gray-100">
-        <div className="flex items-center justify-center gap-2 mb-4 relative">
-          <h1 className="text-3xl ml-2 text-center relative">
+        <div className="flex items-center justify-center gap-4 mb-4 relative">
+          <h1 className="text-3xl text-center relative">
             <div className="absolute top-2 -left-8">
               {isLoading && <Loader />}
             </div>
             Steel Calculator
           </h1>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="px-3 py-1 text-sm rounded border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            Reset
+          </button>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8">
           <div className="flex flex-col gap-y-4">
