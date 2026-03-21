@@ -1,7 +1,21 @@
 import React from "react";
 
-const NumberInput = ({ value, onChange, noDecimals = false }) => {
-  const handleChange = (event) => {
+interface NumberInputProps {
+  value: number | string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  noDecimals?: boolean;
+  id?: string;
+  placeholder?: string;
+}
+
+const NumberInput = ({
+  value,
+  onChange,
+  noDecimals = false,
+  id,
+  placeholder,
+}: NumberInputProps) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     let regex;
     if (noDecimals) {
@@ -14,17 +28,19 @@ const NumberInput = ({ value, onChange, noDecimals = false }) => {
     }
   };
 
-  const handleFocus = (event) => {
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     event.target.select();
   };
 
   return (
     <input
       type="text"
+      id={id}
       value={value}
       onChange={handleChange}
       inputMode="decimal"
       className="input-material"
+      placeholder={placeholder}
       onFocus={handleFocus}
     />
   );

@@ -1,9 +1,12 @@
-import React from "react";
+interface LoaderProps {
+  size?: "sm" | "md";
+}
 
-export default function Loader() {
+export default function Loader({ size = "sm" }: LoaderProps) {
+  const sizeClass = size === "md" ? "h-6 w-6" : "h-4 w-4";
   return (
     <svg
-      className="animate-spin h-5 w-5 text-blue-500"
+      className={`animate-spin ${sizeClass} text-blue-500`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

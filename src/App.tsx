@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
-import Loader from "./components/Loader.jsx";
-import NumberInput from "./components/NumberInput.jsx";
+import Loader from "./components/Loader";
+import NumberInput from "./components/NumberInput";
 import { NumericFormat } from "react-number-format";
 
 import "./App.css";
 
-let timer;
+type CostField = "cost-by-inches" | "cost-by-pieces" | "cost-by-pounds";
+
+function safeDivide(numerator: number, denominator: number): number {
+  if (denominator === 0 || !isFinite(denominator)) return 0;
+  const result = numerator / denominator;
+  return isFinite(result) ? result : 0;
+}
+
+let timer: ReturnType<typeof setTimeout> | undefined;
 
 function App() {
   const [outsideDiameter, setOutsideDiameter] = useState(0.0);
@@ -23,11 +31,11 @@ function App() {
   const [grossProfit, setGrossProfit] = useState(0);
   const [isLoading, setLoading] = useState(false);
 
-  function debounce(func, timeout = 1000) {
-    return (...args) => {
+  function debounce(func: () => void, timeout = 1000) {
+    return () => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        func.apply(this, args);
+        func();
         setLoading(false);
       }, timeout);
     };
@@ -54,198 +62,256 @@ function App() {
       )
     );
   const calcTotalCharge = () =>
-    setTotalCharge(Number(totalCost / (1 - grossPercentage / 100)));
+    setTotalCharge(safeDivide(totalCost, 1 - grossPercentage / 100));
   const calcCostPerInch = () =>
-    setCostPerInch(Number(totalCharge / (length * pieces)));
+    setCostPerInch(safeDivide(totalCharge, length * pieces));
   const calcCostPerPound = () =>
-    setCostPerPound(Number(totalCharge / totalPounds));
-  const calcCostPerPiece = () => setCostPerPiece(Number(totalCharge / pieces));
+    setCostPerPound(safeDivide(totalCharge, totalPounds));
+  const calcCostPerPiece = () =>
+    setCostPerPiece(safeDivide(totalCharge, pieces));
   const calcGrossProfit = () => setGrossProfit(Number(totalCharge - totalCost));
 
   useEffect(() => {
     calcTotalCosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outsideDiameter, length, pieces, cost, externalCost]);
 
   useEffect(() => {
     calcTotalPounds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outsideDiameter, length, pieces]);
 
   useEffect(() => {
     calcTotalCharge();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCost, grossPercentage]);
 
   useEffect(() => {
     calcGrossProfit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCharge, totalCost]);
 
   useEffect(() => {
     calcCostPerPound();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCharge, totalPounds]);
 
   useEffect(() => {
     calcCostPerInch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCharge, length, pieces]);
 
   useEffect(() => {
     calcCostPerPiece();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCharge, pieces]);
 
   useEffect(() => {
     if (!isLoading) return;
     handleModifiedCostPerInch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [costPerInch]);
 
   useEffect(() => {
     if (!isLoading) return;
     handleModifiedCostPerPound();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [costPerPound]);
 
   useEffect(() => {
     if (!isLoading) return;
     handleModifiedCostPerPiece();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [costPerPiece]);
 
   useEffect(() => {
     if (isLoading) setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grossPercentage]);
 
-  const handleRecalculateGrossPercentage = (value, field) => {
+  const handleRecalculateGrossPercentage = (
+    value: number | undefined,
+    field: CostField
+  ) => {
     setLoading(true);
     if (field === "cost-by-inches") {
-      setCostPerInch(value);
+      setCostPerInch(value ?? 0);
     } else if (field === "cost-by-pieces") {
-      setCostPerPiece(value);
+      setCostPerPiece(value ?? 0);
     } else if (field === "cost-by-pounds") {
-      setCostPerPound(value);
+      setCostPerPound(value ?? 0);
     }
   };
 
   const handleModifiedCostPerInch = debounce(() => {
     const grossRevenue = costPerInch * length * pieces;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage);
+    setGrossPercentage(safeDivide(netProfits, grossRevenue) * 100);
   });
 
   const handleModifiedCostPerPound = debounce(() => {
     const grossRevenue = costPerPound * totalPounds;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage);
+    setGrossPercentage(safeDivide(netProfits, grossRevenue) * 100);
   });
 
   const handleModifiedCostPerPiece = debounce(() => {
     const grossRevenue = costPerPiece * pieces;
     const netProfits = grossRevenue - totalCost;
-    const newGrossPercentage = (netProfits / grossRevenue) * 100;
-    setGrossPercentage(newGrossPercentage);
+    setGrossPercentage(safeDivide(netProfits, grossRevenue) * 100);
   });
+
+  const handleReset = () => {
+    setOutsideDiameter(0);
+    setLength(0);
+    setPieces(0);
+    setCost(0);
+    setExternalCost(0);
+    setGrossPercentage(0);
+  };
+
+  const warnings: string[] = [];
+  if (grossPercentage >= 100) warnings.push("Margin cannot be 100% or higher.");
+  if (grossPercentage < 0) warnings.push("Margin cannot be negative.");
 
   return (
     <div className="bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-100 to-gray-900 min-h-screen lg:grid items-center justify-center">
       <div className="mx-auto max-w-7xl w-full p-4 bg-white rounded-md bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-80 border border-gray-100">
-        <div className="flex items-center justify-center gap-2 mb-4 relative">
-          <h1 className="text-3xl ml-2 text-center relative">
-            <div className="absolute top-2 -left-8">
-              {isLoading && <Loader />}
-            </div>
-            Steel Calculator
-          </h1>
+        <div className="flex items-center justify-center gap-4 mb-4 relative">
+          <h1 className="text-3xl text-center">Steel Calculator</h1>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="px-3 py-1 text-sm rounded border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            Reset
+          </button>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8">
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Inputs</h2>
             <label htmlFor="od">Outside Diameter (inches):</label>
             <NumberInput
+              id="od"
               value={outsideDiameter}
-              onChange={(event) => setOutsideDiameter(event.target.value)}
+              placeholder="inches"
+              onChange={(event) =>
+                setOutsideDiameter(parseFloat(event.target.value) || 0)
+              }
             />
             <label htmlFor="length">Length (inches):</label>
             <NumberInput
+              id="length"
               value={length}
-              onChange={(e) => setLength(e.target.value)}
+              placeholder="inches"
+              onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="pieces">Pieces:</label>
             <NumberInput
+              id="pieces"
               value={pieces}
-              onChange={(e) => setPieces(e.target.value)}
+              placeholder="qty"
+              onChange={(e) => setPieces(parseFloat(e.target.value) || 0)}
             />
             <label htmlFor="cost">Cost per Pound:</label>
-            <NumberInput
+            <NumericFormat
+              id="cost"
               value={cost}
-              onChange={(e) => setCost(e.target.value)}
+              displayType={"input"}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => setCost(val.floatValue ?? 0)}
+              decimalScale={4}
+              allowNegative={false}
             />
-            <label htmlFor="cost">External Costs:</label>
-            <NumberInput
+            <label htmlFor="external-cost">External Costs:</label>
+            <NumericFormat
+              id="external-cost"
               value={externalCost}
-              onChange={(e) => setExternalCost(e.target.value)}
-              noDecimals={true}
+              displayType={"input"}
+              thousandSeparator={true}
+              prefix={"$"}
+              className="input-material"
+              onValueChange={(val) => setExternalCost(val.floatValue ?? 0)}
+              decimalScale={2}
+              allowNegative={false}
             />
             <label htmlFor="gross-percentage">Margin</label>
             <NumericFormat
+              id="gross-percentage"
               value={grossPercentage}
               suffix="%"
               displayType={"input"}
               className="input-material"
               onValueChange={(val) => {
-                setGrossPercentage(val.floatValue);
+                setGrossPercentage(val.floatValue ?? 0);
               }}
               decimalScale={2}
-            />
-          </div>
-          <div className="flex flex-col gap-y-4 ">
-            <h2 className="text-center text-2xl">Outputs</h2>
-            <label htmlFor="total-cost">Total Cost:</label>
-            <NumericFormat
-              value={totalCost}
-              displayType={"input"}
-              thousandSeparator={true}
-              prefix={"$"}
-              className="input-material"
-              onValueChange={(val) => {
-                setTotalCost(val.floatValue);
-              }}
-              decimalScale={2}
-            />
-            <label htmlFor="total-pounds">Total Pounds:</label>
-            <NumberInput
-              value={totalPounds}
-              onChange={(e) => setTotalPounds(e.target.value)}
-            />
-            <label htmlFor="gross-profit">Gross Profit:</label>
-            <NumericFormat
-              value={grossProfit}
-              displayType={"input"}
-              thousandSeparator={true}
-              prefix={"$"}
-              className="input-material"
-              onValueChange={(val) => {
-                setGrossProfit(val.floatValue);
-              }}
-              decimalScale={2}
-            />
-            <label htmlFor="total-charge">Total Price:</label>
-            <NumericFormat
-              value={totalCharge}
-              displayType={"input"}
-              thousandSeparator={true}
-              prefix={"$"}
-              className="input-material"
-              onValueChange={(val) => {
-                setTotalCharge(val.floatValue);
-              }}
-              decimalScale={2}
+              allowNegative={false}
+              isAllowed={(values) => (values.floatValue ?? 0) < 100}
             />
           </div>
           <div className="flex flex-col gap-y-4">
+            <h2 className="text-center text-2xl">Outputs</h2>
+            <p className="text-sm font-medium text-gray-700">Total Cost:</p>
+            <div className="output-readonly">
+              <NumericFormat
+                value={totalCost}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"$"}
+                decimalScale={2}
+              />
+            </div>
+            <p className="text-sm font-medium text-gray-700">Total Pounds:</p>
+            <div className="output-readonly">
+              <NumericFormat
+                value={totalPounds}
+                displayType={"text"}
+                thousandSeparator={true}
+                decimalScale={2}
+              />
+            </div>
+            <p className="text-sm font-medium text-gray-700">Gross Profit:</p>
+            <div className="output-readonly">
+              <NumericFormat
+                value={grossProfit}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"$"}
+                decimalScale={2}
+              />
+            </div>
+            <p className="text-sm font-medium text-gray-700">Total Price:</p>
+            <div className="output-readonly">
+              <NumericFormat
+                value={totalCharge}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"$"}
+                decimalScale={2}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Breakdown</h2>
+            <p className="text-center text-xs text-gray-500 h-5">
+              {isLoading ? (
+                <span className="inline-flex items-center gap-1 text-amber-600">
+                  <Loader /> Recalculating...
+                </span>
+              ) : (
+                "Edit to recalculate margin"
+              )}
+            </p>
             <label htmlFor="cost-per-inches">Price per Inch:</label>
             <NumericFormat
+              id="cost-per-inches"
               value={costPerInch || 0}
               displayType={"input"}
               thousandSeparator={true}
               prefix={"$"}
-              className="input-material"
+              className="input-breakdown"
               onValueChange={(val) => {
                 handleRecalculateGrossPercentage(
                   val.floatValue,
@@ -254,33 +320,14 @@ function App() {
               }}
               decimalScale={2}
             />
-            {/* <NumberInput
-              value={usdFormat.format(costPerInch) || 0}
-              onChange={(e) =>
-                handleRecalculateGrossPercentage(
-                  e.target.value,
-                  "cost-by-inches"
-                )
-              }
-            /> */}
-            {/* <USDNumberFormat
-              className="number-input"
-              value={costPerInch}
-              onValueChange={(val) => {
-                setLoading(true);
-                debounce(() => setCostPerInch(val.floatValue));
-              }}
-              decimalScale={2}
-              thousandSeparator={true}
-              prefix={"$"}
-            /> */}
             <label htmlFor="cost-per-pieces">Price per Piece:</label>
             <NumericFormat
+              id="cost-per-pieces"
               value={costPerPiece || 0}
               displayType={"input"}
               thousandSeparator={true}
               prefix={"$"}
-              className="input-material"
+              className="input-breakdown"
               onValueChange={(val) => {
                 handleRecalculateGrossPercentage(
                   val.floatValue,
@@ -289,22 +336,14 @@ function App() {
               }}
               decimalScale={2}
             />
-            {/* <NumberInput
-              value={usdFormat.format(costPerPiece) || 0}
-              onChange={(e) =>
-                handleRecalculateGrossPercentage(
-                  e.target.value,
-                  "cost-by-pieces"
-                )
-              }
-            /> */}
             <label htmlFor="cost-per-pound">Price per Pound:</label>
             <NumericFormat
+              id="cost-per-pound"
               value={costPerPound || 0}
               displayType={"input"}
               thousandSeparator={true}
               prefix={"$"}
-              className="input-material"
+              className="input-breakdown"
               onValueChange={(val) => {
                 handleRecalculateGrossPercentage(
                   val.floatValue,
@@ -313,16 +352,16 @@ function App() {
               }}
               decimalScale={2}
             />
-            {/* <NumberInput
-              value={usdFormat.format(costPerPound) || 0}
-              onChange={(e) =>
-                handleRecalculateGrossPercentage(
-                  e.target.value,
-                  "cost-by-pounds"
-                )
-              }
-            /> */}
           </div>
+          {warnings.length > 0 && (
+            <div className="col-span-1 lg:col-span-3 mt-2">
+              {warnings.map((w, i) => (
+                <p key={i} className="text-sm text-red-600">
+                  {w}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
