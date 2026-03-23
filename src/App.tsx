@@ -1,16 +1,11 @@
 import { useState, useEffect } from "react";
 import Loader from "./components/Loader";
 import { NumericFormat } from "react-number-format";
+import { safeDivide } from "./utils";
 
 import "./App.css";
 
 type CostField = "cost-by-inches" | "cost-by-pieces" | "cost-by-pounds";
-
-function safeDivide(numerator: number, denominator: number): number {
-  if (denominator === 0 || !isFinite(denominator)) return 0;
-  const result = numerator / denominator;
-  return isFinite(result) ? result : 0;
-}
 
 let timer: ReturnType<typeof setTimeout> | undefined;
 

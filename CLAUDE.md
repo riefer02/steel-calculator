@@ -15,6 +15,8 @@ npm run preview      # Preview production build
 npm run lint         # ESLint (flat config, typescript-eslint)
 npm run format       # Prettier write
 npm run format:check # Prettier check
+npm test             # Run Vitest test suite
+npm run test:watch   # Run Vitest in watch mode
 ```
 
 ## Architecture
