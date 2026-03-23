@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Loader from "./components/Loader";
-import NumberInput from "./components/NumberInput";
 import { NumericFormat } from "react-number-format";
 
 import "./App.css";
@@ -191,27 +190,37 @@ function App() {
           <div className="flex flex-col gap-y-4">
             <h2 className="text-center text-2xl">Inputs</h2>
             <label htmlFor="od">Outside Diameter (inches):</label>
-            <NumberInput
+            <NumericFormat
               id="od"
               value={outsideDiameter}
+              displayType={"input"}
+              className="input-material"
               placeholder="inches"
-              onChange={(event) =>
-                setOutsideDiameter(parseFloat(event.target.value) || 0)
-              }
+              onValueChange={(val) => setOutsideDiameter(val.floatValue ?? 0)}
+              decimalScale={4}
+              allowNegative={false}
             />
             <label htmlFor="length">Length (inches):</label>
-            <NumberInput
+            <NumericFormat
               id="length"
               value={length}
+              displayType={"input"}
+              className="input-material"
               placeholder="inches"
-              onChange={(e) => setLength(parseFloat(e.target.value) || 0)}
+              onValueChange={(val) => setLength(val.floatValue ?? 0)}
+              decimalScale={4}
+              allowNegative={false}
             />
             <label htmlFor="pieces">Pieces:</label>
-            <NumberInput
+            <NumericFormat
               id="pieces"
               value={pieces}
+              displayType={"input"}
+              className="input-material"
               placeholder="qty"
-              onChange={(e) => setPieces(parseFloat(e.target.value) || 0)}
+              onValueChange={(val) => setPieces(val.floatValue ?? 0)}
+              decimalScale={0}
+              allowNegative={false}
             />
             <label htmlFor="cost">Cost per Pound:</label>
             <NumericFormat

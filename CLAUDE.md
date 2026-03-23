@@ -33,8 +33,8 @@ All calculator logic lives in `src/App.tsx` — a single component with 14 useSt
 Margin can be driven forward (user sets margin → price calculated) or backward (user edits a per-unit price → margin recalculated). Backward edits are debounced at 1000ms with a loading spinner overlay.
 
 **Components**:
-- `NumberInput` — regex-validated numeric input with optional `noDecimals` prop; auto-selects on focus
 - `Loader` — SVG spinner shown during debounced recalculations
+- All numeric inputs use `NumericFormat` from `react-number-format` for consistent decimal handling
 
 **Styling**: Tailwind utilities for layout (`grid-cols-1 lg:grid-cols-3`), custom CSS classes (`.input-material`, `.btn-submit`) in `App.css` for input/button styling.
 
