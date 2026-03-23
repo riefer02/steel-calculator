@@ -192,8 +192,9 @@ function App() {
               className="input-material"
               placeholder="inches"
               onValueChange={(val) => setOutsideDiameter(val.floatValue ?? 0)}
-              decimalScale={4}
+              onFocus={(e) => e.target.select()}
               allowNegative={false}
+              inputMode="decimal"
             />
             <label htmlFor="length">Length (inches):</label>
             <NumericFormat
@@ -203,8 +204,9 @@ function App() {
               className="input-material"
               placeholder="inches"
               onValueChange={(val) => setLength(val.floatValue ?? 0)}
-              decimalScale={4}
+              onFocus={(e) => e.target.select()}
               allowNegative={false}
+              inputMode="decimal"
             />
             <label htmlFor="pieces">Pieces:</label>
             <NumericFormat
@@ -214,8 +216,9 @@ function App() {
               className="input-material"
               placeholder="qty"
               onValueChange={(val) => setPieces(val.floatValue ?? 0)}
-              decimalScale={0}
+              onFocus={(e) => e.target.select()}
               allowNegative={false}
+              inputMode="decimal"
             />
             <label htmlFor="cost">Cost per Pound:</label>
             <NumericFormat

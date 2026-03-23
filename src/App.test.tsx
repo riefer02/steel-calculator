@@ -94,14 +94,13 @@ describe("App", () => {
       expect(getInput("Length (inches):").value).toBe("240.75");
     });
 
-    it("rejects decimal values in Pieces", async () => {
+    it("allows decimal values in Pieces", async () => {
       const user = userEvent.setup();
       render(<App />);
 
       await fillInput(user, "Pieces:", "10.5");
 
-      // decimalScale={0} should strip the decimal portion
-      expect(getInput("Pieces:").value).not.toContain(".");
+      expect(getInput("Pieces:").value).toBe("10.5");
     });
 
     it("allows decimal values in Cost per Pound", async () => {
@@ -123,7 +122,7 @@ describe("App", () => {
     });
   });
 
-  describe("input validation", () => {
+  describe("input validation (matches original regex)", () => {
     it("does not allow negative values in Outside Diameter", async () => {
       const user = userEvent.setup();
       render(<App />);
@@ -149,6 +148,15 @@ describe("App", () => {
       await fillInput(user, "Pieces:", "-10");
 
       expect(getInput("Pieces:").value).not.toContain("-");
+    });
+
+    it("does not allow negative values in Cost per Pound", async () => {
+      const user = userEvent.setup();
+      render(<App />);
+
+      await fillInput(user, "Cost per Pound:", "-5");
+
+      expect(getInput("Cost per Pound:").value).not.toContain("-");
     });
   });
 
